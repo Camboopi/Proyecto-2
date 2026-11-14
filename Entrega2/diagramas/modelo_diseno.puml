@@ -1,0 +1,625 @@
+@startuml
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam shadowing false
+
+class "UbicacionInventario" as mR7kP2vL9xQ4wN8zT1yB_1 {
+  - nombreUbicacion: String
+  - cantidadesPorArticulo: Map<ArticuloTienda, Integer>
+  --
+  + moverArticulosA(dest: UbicacionInventario, art, cant)
+  + descontarExistencia(art: ArticuloTienda, cant: int): int
+}
+
+class "ArticuloTienda" as mR7kP2vL9xQ4wN8zT1yB_2 {
+  - nombre: String (Raquetas, Balones, Mallas...)
+  - categoria: String
+  - precio: double
+  - cantidadDisponible: int
+  --
+  + calcularPrecioConIVA19(): double
+}
+
+class "DetalleVenta" as mR7kP2vL9xQ4wN8zT1yB_3 {
+  - cantidad: int
+  - precioUnitario: double
+  - subtotalRubro: double
+  --
+  + calcularSubtotal(): double
+}
+
+class "VentaTienda" as mR7kP2vL9xQ4wN8zT1yB_4 {
+  - iva: double = 0.19 (19%)
+  - ubicacionesSincronizadas: boolean
+  --
+  + calcularTotalConIVA(): double
+}
+
+abstract class "Venta" as mR7kP2vL9xQ4wN8zT1yB_5 {
+  # fecha: String, # rubroContable: String
+  # subtotal: double, # valorTotal: double
+  # descuentoEmpleado: double (15% propio / 8% socio)
+  # puntosRedimidos: int (simultáneo con desc. empleado)
+  # bonoAplicado: BonoDescuento (no acumulable)
+  # puntosFidelidadGenerados: int (2% del valor)
+  --
+  + aplicarCodigoDescuento(emp: Empleado): boolean
+  + redimirPuntosComoDescuento(pts: int): boolean
+  + aplicarBonoTorneoRecreativo(b: BonoDescuento): bool
+}
+
+class "VentaCafeteria" as mR7kP2vL9xQ4wN8zT1yB_6 {
+  - impuestoConsumo: double = 0.08 (8%)
+  - propinaSugerida: double = 0.10 (modificable)
+  - alergenosInformados: boolean
+  --
+  + modificarPropina(valor: double): void
+  + validarDespachoSegunInstalacion(): boolean
+}
+
+abstract class "ProductoCafeteria" as mR7kP2vL9xQ4wN8zT1yB_7 {
+  # nombre: String
+  # precio: double
+  --
+  + puedeDespacharseEn(inst: Instalacion): boolean
+}
+
+class "Bebida" as mR7kP2vL9xQ4wN8zT1yB_8 {
+  - esCaliente: boolean (Fría / Caliente)
+  --
+  + prohibidaEnPadelOMesaTechada(inst: Instalacion): bool
+}
+
+class "Snack" as mR7kP2vL9xQ4wN8zT1yB_9 {
+  - alergenos: List<String> (Maní, Gluten, Lácteos...)
+  --
+  + informarAlergenosAlSocio(): String
+}
+
+class "ReporteAdministrativo" as mR7kP2vL9xQ4wN8zT1yB_10 {
+  - rubro: String (Tienda, Cafetería, Mensualidades)
+  - periodo: String (Diario, Semanal, Mensual)
+  --
+  + generarReporteVentasPorRubroYPeriodo(): String
+  + generarReporteDeportivoAsistenciaYPartidos(): String
+  + generarReporteEvolucionRankings(): String
+}
+
+class "Administrador" as mR7kP2vL9xQ4wN8zT1yB_11 {
+  --
+  + verEstadoInventarioInstalacionesYArticulos(): void
+  + verHistorialReservasPartidosEntrenamientos(): void
+  + crearODarBajaEquipoYJugador(): void
+  + moverArticulosUbicacionInventario(): boolean
+  + reabastecerTienda(): void
+  + aprobarSugerenciaEmpleado(s: SugerenciaProducto): void
+  + aprobarCambioTurno(sol: SolicitudCambioTurno): bool
+  + puedeReservarUsoPersonal(): false
+}
+
+class "SugerenciaProducto" as mR7kP2vL9xQ4wN8zT1yB_12 {
+  - nombrePropuesto: String
+  - tipo: String (Artículo Tienda / Snack)
+  - aprobada: boolean
+  --
+  + aprobarPorAdministrador(): void
+}
+
+class "SolicitudCambioTurno" as mR7kP2vL9xQ4wN8zT1yB_13 {
+  - aprobada: boolean
+  --
+  + mantieneMin2EntrenadoresY1Fisio(): boolean
+}
+
+class "TurnoSemanal" as mR7kP2vL9xQ4wN8zT1yB_14 {
+  - dia: String
+  - horarioAtencion: String
+  --
+  + cumpleMin2EntrenadoresY1Fisio(): bool
+}
+
+abstract class "Usuario" as mR7kP2vL9xQ4wN8zT1yB_15 {
+  # login: String, # password: String
+  # nombre: String
+  # puntosFidelidad: int (1 punto = 1 peso)
+  --
+  + autenticar(pass: String): boolean
+  + acumularPuntos2Porciento(valor: double): int
+  + redimirPuntos(pts: int): boolean
+}
+
+class "ClubDeportivoSeneca" as mR7kP2vL9xQ4wN8zT1yB_16 {
+  - nombre: String = 'Club Deportivo Séneca'
+  - minEntrenadoresPorTurno: int = 2
+  - minFisioterapeutasPorTurno: int = 1
+  --
+  + autenticarUsuario(login, pass): Usuario
+  + descontarDeUbicacionesInventario(art, cant): void
+  + crearTorneoRecreativo(...) / crearTorneoCompetitivo(...)
+}
+
+abstract class "Empleado" as mR7kP2vL9xQ4wN8zT1yB_17 {
+  # codigoDescuento: String
+  # descuentoPropio: double = 0.15 (15%)
+  # descuentoSocios: double = 0.08 (8%)
+  --
+  + obtenerDescuento(comprador: Usuario): double
+  + sugerirArticuloOSnack(nom, tipo): SugerenciaProducto
+  + solicitarCambioTurno(act, nvo): SolicitudCambioTurno
+}
+
+class "Fisioterapeuta" as mR7kP2vL9xQ4wN8zT1yB_18 {
+  --
+  + disponibleEnTurno(t: TurnoSemanal): bool
+}
+
+class "Entrenador" as mR7kP2vL9xQ4wN8zT1yB_19 {
+  --
+  + planearSesionEntrenamiento(): SesionEntrenamiento
+  + registrarAsistencia(ses, socio, estado): void
+  + registrarEvaluacionOpcional(asist, nota, com): void
+  + puedeJugarConCualquierNivel(): true
+}
+
+class "EvaluacionDesempeno" as mR7kP2vL9xQ4wN8zT1yB_20 {
+  - nota: int (Escala de 1 a 5)
+  - comentario: String
+  --
+  + validarNota1A5(): boolean
+}
+
+class "RegistroAsistencia" as mR7kP2vL9xQ4wN8zT1yB_21 {
+  - estado: String (Asistió, Faltó, Llegó tarde)
+  --
+  + agregarEvaluacionOpcional(nota: int, com: String): void
+}
+
+class "SesionEntrenamiento" as mR7kP2vL9xQ4wN8zT1yB_22 {
+  - fecha: String
+  - hora: String
+  - duracion: int
+  --
+  + convocarEquipo(eq: Equipo): void
+  + convocarSubconjuntoSocios(socios: List<Socio>): void
+}
+
+class "ReservaInstalacion" as mR7kP2vL9xQ4wN8zT1yB_23 {
+  - bloqueHorario: String
+  - cantidadJugadores: int
+  - modalidad: String (Sencillos / Dobles)
+  --
+  + hayCupoSimultaneoEnDisciplina(): boolean
+  + validarSinBebidaCaliente(s: Socio): boolean
+}
+
+abstract class "Instalacion" as mR7kP2vL9xQ4wN8zT1yB_24 {
+  # nombre: String
+  # capacidadJugadores: int
+  --
+  + admiteModalidadYJugadores(mod, cant): boolean
+  + permiteBebidaCaliente(): boolean
+}
+
+class "CanchaTenis" as mR7kP2vL9xQ4wN8zT1yB_25 {
+  - capacidadSencillos: int = 2
+  - capacidadDobles: int = 4
+  --
+  + permiteBebidaCaliente(): true
+}
+
+class "CanchaPadel" as mR7kP2vL9xQ4wN8zT1yB_26 {
+  - capacidadDoblesFija: int = 4
+  - soloModalidadDobles: boolean = true
+  --
+  + permiteBebidaCaliente(): false
+}
+
+class "MesaTenisDeMesa" as mR7kP2vL9xQ4wN8zT1yB_27 {
+  - capacidadSencillos: int = 2
+  - capacidadDobles: int = 4
+  - esTechada: boolean
+  --
+  + permiteBebidaCaliente(): !esTechada
+}
+
+abstract class "Deporte" as mR7kP2vL9xQ4wN8zT1yB_28 {
+  # nombre: String
+  --
+  + esDeporteDeConjunto(): boolean
+}
+
+abstract class "DisciplinaIndividual" as mR7kP2vL9xQ4wN8zT1yB_29 {
+  # maxInstalacionesSimultaneas: int
+  # niveles: Principiante, Intermedio, Avanzado
+  --
+  + nivelesIgualesOAdyacentes(n1, n2, hayCoach): bool
+  + actualizarRankingELO(eloA, eloB, res): double
+}
+
+class "Tenis" as mR7kP2vL9xQ4wN8zT1yB_30 {
+  - admiteSencillos: boolean = true (2 jug.)
+  - admiteDobles: boolean = true (4 jug.)
+  --
+  + validarModalidad(mod: String, cant: int): bool
+}
+
+class "Padel" as mR7kP2vL9xQ4wN8zT1yB_31 {
+  - siempreDobles: boolean = true (4 jug.)
+  --
+  + validarCuatroJugadores(cant: int): bool
+}
+
+class "TenisDeMesa" as mR7kP2vL9xQ4wN8zT1yB_32 {
+  - admiteSencillos: boolean = true (2 jug.)
+  - admiteDobles: boolean = true (4 jug.)
+  --
+  + validarModalidad(mod: String, cant: int): bool
+}
+
+abstract class "DeporteConjunto" as mR7kP2vL9xQ4wN8zT1yB_33 {
+  # minJugadoresHabilitados: int
+  # permiteEmpates: boolean
+  # categoriasEdad: Sub-13, Sub-15, Sub-17, Mayores
+  --
+  + alcanzaMinimoJugadores(habilitados: int): bool
+  + otorgarPuntosLiga(victoria: bool, empate: bool): int
+}
+
+class "Futbol" as mR7kP2vL9xQ4wN8zT1yB_34 {
+  - minJugadoresHabilitados: int = 7
+  - permiteEmpates: boolean = true
+  - puntosVictoria: int = 3, puntosEmpate: int = 1
+  - posiciones: Portero, Defensa, Medio, Delantero
+  --
+  + generaSuspension(amarillas: int, rojas: int): bool
+}
+
+class "Baloncesto" as mR7kP2vL9xQ4wN8zT1yB_35 {
+  - minJugadoresHabilitados: int = 5
+  - permiteEmpates: boolean = false
+  --
+  + validarSinEmpate(ptsA, ptsB): bool
+}
+
+class "Voleibol" as mR7kP2vL9xQ4wN8zT1yB_36 {
+  - minJugadoresHabilitados: int = 6
+  - permiteEmpates: boolean = false
+  - marcadorPorSets: boolean = true
+  --
+  + validarGanadorPorSets(sA, sB): bool
+}
+
+class "PerfilAcademiaIndividual" as mR7kP2vL9xQ4wN8zT1yB_37 {
+  - nivel: String (Principiante, Intermedio, Avanzado)
+  - puntajeRankingELO: double
+  --
+  + esIgualOAdyacente(otro: PerfilAcademiaIndividual): bool
+  + actualizarPuntajeELO(nuevoELO: double): void
+}
+
+class "Socio" as mR7kP2vL9xQ4wN8zT1yB_38 {
+  - edad: int
+  - categoriaEdad: String (Sub-13, Sub-15, Sub-17, Mayores)
+  - tieneBebidaCaliente: boolean
+  - bonosDescuento: List<BonoDescuento>
+  --
+  + correspondeACategoria(cat: String): boolean
+  + agregarBonoDescuento(b: BonoDescuento): void
+  + perteneceAEquipoEnDeporte(dep: DeporteConjunto): bool
+}
+
+class "InscripcionEquipo" as mR7kP2vL9xQ4wN8zT1yB_39 {
+  - posicion: String, - numeroCamisetaUnico: int
+  - tarjetasAmarillasAcumuladas: int
+  --
+  + acumularTarjetasYVerificarSuspension(am, rj): void
+  + tieneSuspensionActiva(): boolean
+}
+
+class "Equipo" as mR7kP2vL9xQ4wN8zT1yB_40 {
+  - nombre: String
+  - categoria: String (Sub-13, Sub-15, Sub-17, Mayores)
+  - cupoMaximoJugadores: int
+  --
+  + inscribirJugador(s: Socio, pos: String, cam: int): bool
+  + camisetaDisponible(camiseta: int): boolean
+  + obtenerJugadoresHabilitados(): List<Socio>
+}
+
+abstract class "Competencia" as mR7kP2vL9xQ4wN8zT1yB_41 {
+  # nombre: String
+  # entidadOrganizadora: String (ASCUN / Cerros)
+  # anioTemporada: String
+  # categoriaHabilitada: String (Mayores)
+  # equipoInscrito: Equipo (único representante)
+  --
+  + cumpleRequisitosInscripcion(eq: Equipo): bool
+  + registrarNominaOficial(eq: Equipo, jug: List): bool
+  + obtenerGoleadorODestacado(): Socio
+}
+
+class "CompetenciaLiga (Torneo de los Cerros)" as mR7kP2vL9xQ4wN8zT1yB_42 {
+  - formato: String = 'Liga todos contra todos'
+  - tablaPosiciones: Map<String, Integer>
+  --
+  + otorgarPuntosSegunDeporte(p: PartidoCompetencia): void
+  + consultarTablaPosiciones(): Map<String, Integer>
+}
+
+class "CompetenciaFases (ASCUN)" as mR7kP2vL9xQ4wN8zT1yB_43 {
+  - faseActual: String (Grupos / Eliminación Directa)
+  --
+  + avanzarPorPuntosYEnfrentamientoDirecto(): void
+  + registrarResultadoEliminacionDirecta(): void
+}
+
+class "SancionDisciplinaria" as mR7kP2vL9xQ4wN8zT1yB_44 {
+  - motivo: String (2 Amarillas Acumuladas o 1 Roja)
+  - suspendidoSiguientePartido: boolean = true
+  --
+  + puedeSerAlineado(): boolean
+  + cumplirSuspensionSiguientePartido(): void
+}
+
+class "PartidoPracticaIndividual" as mR7kP2vL9xQ4wN8zT1yB_45 {
+  - modalidad: String (Sencillos / Dobles)
+  - participaEntrenador: boolean
+  --
+  + validarNivelesIgualesOAdyacentes(): boolean
+  + actualizarPuntajeRankingELO(): void
+}
+
+class "PartidoInterno" as mR7kP2vL9xQ4wN8zT1yB_46 {
+  - marcadorFinal: String
+  --
+  + validarMismaCategoriaYDeporte(): boolean
+  + validarMinimoJugadoresHabilitados(): boolean
+  + aplicarSuspensionPorTarjetas(): void
+}
+
+class "PartidoCompetencia" as mR7kP2vL9xQ4wN8zT1yB_47 {
+  - institucionRival: String
+  - escenario: String
+  - marcadorFinal: String
+  --
+  + validarEnNominaCompetencia(): boolean
+  + verificarSinSuspensionActiva(): boolean
+}
+
+abstract class "Partido" as mR7kP2vL9xQ4wN8zT1yB_48 {
+  # fecha: String
+  # disputado: boolean, # cancelado: boolean
+  # motivoCancelacion: String
+  --
+  + puedeDisputarse(): boolean
+  + cancelarPartido(motivo: String): void
+  + registrarEstadisticasIndividuales(): void
+}
+
+abstract class "EstadisticaJugadorPartido" as mR7kP2vL9xQ4wN8zT1yB_49 {
+  --
+  + registrarEnPartido(p: Partido, s: Socio): void
+}
+
+class "EstadisticaFutbol" as mR7kP2vL9xQ4wN8zT1yB_50 {
+  - goles: int, - asistencias: int
+  - tarjetasAmarillas: int
+  - tarjetasRojas: int
+  - tarjetasProcesadas: boolean
+  --
+  + generaSuspensionSiguientePartido(): bool
+}
+
+class "EstadisticaBaloncesto" as mR7kP2vL9xQ4wN8zT1yB_51 {
+  - puntos: int
+  - rebotes: int
+  --
+  + getPuntos(): int, + getRebotes(): int
+}
+
+class "EstadisticaVoleibol" as mR7kP2vL9xQ4wN8zT1yB_52 {
+  - aces: int
+  - bloqueos: int
+  --
+  + getAces(): int, + getBloqueos(): int
+}
+
+class "EstadisticaTenisPadel" as mR7kP2vL9xQ4wN8zT1yB_53 {
+  - setsGanados: int
+  - gamesGanados: int
+  - aces: int
+  - erroresNoForzados: int
+  --
+  + getSetsGanados(): int
+  + getGamesGanados(): int
+}
+
+class "EstadisticaTenisDeMesa" as mR7kP2vL9xQ4wN8zT1yB_54 {
+  - setsGanados: int
+  - puntosTotales: int
+  --
+  + getSetsGanados(): int
+  + getPuntosTotales(): int
+}
+
+class "BonoDescuento" as mR7kP2vL9xQ4wN8zT1yB_55 {
+  - codigo: String
+  - porcentajeDescuento: double
+  - nombreTorneoOrigen: String
+  - usado: boolean (no acumulable)
+  --
+  + calcularDescuentoSobre(sub: double): double
+  + marcarComoUsado(): void
+}
+
+class "TorneoRecreativo" as mR7kP2vL9xQ4wN8zT1yB_56 {
+  - porcentajeBonoPremio: double
+  - bonoOtorgado: BonoDescuento
+  --
+  + calcularCostoInscripcion(esEmp: bool): 0.0
+  + finalizarTorneo(campeon: String): boolean
+  + obtenerResumenPremio(): String
+}
+
+class "TorneoCompetitivo" as mR7kP2vL9xQ4wN8zT1yB_57 {
+  - tarifaInscripcion: double
+  - totalRecaudado: double
+  - premioEfectivoEntregado: double
+  --
+  + calcularCostoInscripcion(esEmp: bool): double
+  + finalizarTorneo(campeon: String): boolean
+  + obtenerResumenPremio(): String
+}
+
+abstract class "TorneoInterno" as mR7kP2vL9xQ4wN8zT1yB_58 {
+  # nombre: String, # diaTorneo: String
+  # categoriaONivel: String, # modalidad: String
+  # maxCupos: int
+  # cuposPreferencialesReservados: int (20%)
+  # cuposPreferencialesLiberados: boolean
+  # estado: String (Abiertas / En curso / Finalizado)
+  --
+  + inscribirMiembroIndividual(u: Usuario, niv, turnos): bool
+  + liberarCuposPreferenciales(): boolean
+  + retirarParticipante(nombre: String): boolean
+  + consultarHistorialDetallado(): String
+}
+
+class "ParticipanteTorneo" as mR7kP2vL9xQ4wN8zT1yB_59 {
+  - nombreParticipante: String
+  - tipoParticipante: String (Socio/Empleado/Externo)
+  - usaCupoPreferencial: boolean
+  - valorPagadoInscripcion: double
+  --
+  + esEmpleadoDelClub(): boolean
+  + getUsuarioMiembro(): Usuario
+}
+
+class "EncuentroTorneo" as mR7kP2vL9xQ4wN8zT1yB_60 {
+  - faseORonda: String
+  - participanteA: String, - participanteB: String
+  - marcador: String
+  - ganador: String
+  --
+  + obtenerResumenEncuentro(): String
+}
+
+class "ManejadorPersistencia" as mR7kP2vL9xQ4wN8zT1yB_61 {
+  - carpetaDatos: String = 'data'
+  --
+  + cargarTodo(club: ClubDeportivoSeneca): void
+  + guardarTodo(club: ClubDeportivoSeneca): void
+  - cargarTorneos(club: ClubDeportivoSeneca): void
+  - guardarTorneos(club: ClubDeportivoSeneca): void
+}
+
+class "ConsolaSocio" as mR7kP2vL9xQ4wN8zT1yB_62 {
+  - club: ClubDeportivoSeneca
+  - socioActual: Socio
+  --
+  + main(args: String[]): void
+  + inscribirseORetirarseTorneoInterno(): void
+  + comprarEnTiendaDeportiva(): void
+}
+
+class "ConsolaEmpleado" as mR7kP2vL9xQ4wN8zT1yB_63 {
+  - club: ClubDeportivoSeneca
+  - empleadoActual: Empleado
+  --
+  + main(args: String[]): void
+  + comprarConDescuentoEmpleadoYPuntos(): void
+  + inscribirseORetirarseTorneoIndividual(): void
+}
+
+class "ConsolaAdministrador" as mR7kP2vL9xQ4wN8zT1yB_64 {
+  - club: ClubDeportivoSeneca
+  - adminActual: Administrador
+  --
+  + main(args: String[]): void
+  + crearTorneoInterno(): void
+  + administrarTorneoInterno(): void
+}
+
+class "LectorConsola" as mR7kP2vL9xQ4wN8zT1yB_65 {
+  - scanner: Scanner
+  --
+  + leerTexto(mensaje: String): String
+  + leerEntero(msg: String, min: int, max: int): int
+  + leerSiNo(mensaje: String): boolean
+}
+
+mR7kP2vL9xQ4wN8zT1yB_5 <|-- mR7kP2vL9xQ4wN8zT1yB_4
+mR7kP2vL9xQ4wN8zT1yB_5 <|-- mR7kP2vL9xQ4wN8zT1yB_6
+mR7kP2vL9xQ4wN8zT1yB_7 <|-- mR7kP2vL9xQ4wN8zT1yB_8
+mR7kP2vL9xQ4wN8zT1yB_7 <|-- mR7kP2vL9xQ4wN8zT1yB_9
+mR7kP2vL9xQ4wN8zT1yB_15 <|-- mR7kP2vL9xQ4wN8zT1yB_11
+mR7kP2vL9xQ4wN8zT1yB_15 <|-- mR7kP2vL9xQ4wN8zT1yB_17
+mR7kP2vL9xQ4wN8zT1yB_15 <|-- mR7kP2vL9xQ4wN8zT1yB_38
+mR7kP2vL9xQ4wN8zT1yB_17 <|-- mR7kP2vL9xQ4wN8zT1yB_18
+mR7kP2vL9xQ4wN8zT1yB_17 <|-- mR7kP2vL9xQ4wN8zT1yB_19
+mR7kP2vL9xQ4wN8zT1yB_24 <|-- mR7kP2vL9xQ4wN8zT1yB_25
+mR7kP2vL9xQ4wN8zT1yB_24 <|-- mR7kP2vL9xQ4wN8zT1yB_26
+mR7kP2vL9xQ4wN8zT1yB_24 <|-- mR7kP2vL9xQ4wN8zT1yB_27
+mR7kP2vL9xQ4wN8zT1yB_28 <|-- mR7kP2vL9xQ4wN8zT1yB_29
+mR7kP2vL9xQ4wN8zT1yB_28 <|-- mR7kP2vL9xQ4wN8zT1yB_33
+mR7kP2vL9xQ4wN8zT1yB_29 <|-- mR7kP2vL9xQ4wN8zT1yB_30
+mR7kP2vL9xQ4wN8zT1yB_29 <|-- mR7kP2vL9xQ4wN8zT1yB_31
+mR7kP2vL9xQ4wN8zT1yB_29 <|-- mR7kP2vL9xQ4wN8zT1yB_32
+mR7kP2vL9xQ4wN8zT1yB_33 <|-- mR7kP2vL9xQ4wN8zT1yB_34
+mR7kP2vL9xQ4wN8zT1yB_33 <|-- mR7kP2vL9xQ4wN8zT1yB_35
+mR7kP2vL9xQ4wN8zT1yB_33 <|-- mR7kP2vL9xQ4wN8zT1yB_36
+mR7kP2vL9xQ4wN8zT1yB_41 <|-- mR7kP2vL9xQ4wN8zT1yB_42
+mR7kP2vL9xQ4wN8zT1yB_41 <|-- mR7kP2vL9xQ4wN8zT1yB_43
+mR7kP2vL9xQ4wN8zT1yB_48 <|-- mR7kP2vL9xQ4wN8zT1yB_45
+mR7kP2vL9xQ4wN8zT1yB_48 <|-- mR7kP2vL9xQ4wN8zT1yB_46
+mR7kP2vL9xQ4wN8zT1yB_48 <|-- mR7kP2vL9xQ4wN8zT1yB_47
+mR7kP2vL9xQ4wN8zT1yB_49 <|-- mR7kP2vL9xQ4wN8zT1yB_50
+mR7kP2vL9xQ4wN8zT1yB_49 <|-- mR7kP2vL9xQ4wN8zT1yB_51
+mR7kP2vL9xQ4wN8zT1yB_49 <|-- mR7kP2vL9xQ4wN8zT1yB_52
+mR7kP2vL9xQ4wN8zT1yB_49 <|-- mR7kP2vL9xQ4wN8zT1yB_53
+mR7kP2vL9xQ4wN8zT1yB_49 <|-- mR7kP2vL9xQ4wN8zT1yB_54
+mR7kP2vL9xQ4wN8zT1yB_58 <|-- mR7kP2vL9xQ4wN8zT1yB_56
+mR7kP2vL9xQ4wN8zT1yB_58 <|-- mR7kP2vL9xQ4wN8zT1yB_57
+mR7kP2vL9xQ4wN8zT1yB_1 "1..*" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_2 : almacena
+mR7kP2vL9xQ4wN8zT1yB_4 "0..*" --> "1..*" mR7kP2vL9xQ4wN8zT1yB_2 : incluye
+mR7kP2vL9xQ4wN8zT1yB_6 "0..*" --> "1..*" mR7kP2vL9xQ4wN8zT1yB_7 : despacha
+mR7kP2vL9xQ4wN8zT1yB_5 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_3 : detalle
+mR7kP2vL9xQ4wN8zT1yB_10 "0..*" ..> "0..*" mR7kP2vL9xQ4wN8zT1yB_5 : consolida
+mR7kP2vL9xQ4wN8zT1yB_15 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_5 : realizaCompra
+mR7kP2vL9xQ4wN8zT1yB_16 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_15 : gestiona
+mR7kP2vL9xQ4wN8zT1yB_16 "1" *--> "6" mR7kP2vL9xQ4wN8zT1yB_28 : ofrece
+mR7kP2vL9xQ4wN8zT1yB_11 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_10 : consulta
+mR7kP2vL9xQ4wN8zT1yB_11 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_12 : aprueba
+mR7kP2vL9xQ4wN8zT1yB_11 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_13 : validaQuorum
+mR7kP2vL9xQ4wN8zT1yB_13 "0..*" --> "2" mR7kP2vL9xQ4wN8zT1yB_14 : intercambia
+mR7kP2vL9xQ4wN8zT1yB_17 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_12 : propone
+mR7kP2vL9xQ4wN8zT1yB_17 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_13 : radica
+mR7kP2vL9xQ4wN8zT1yB_17 "1..*" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_14 : asignadoA
+mR7kP2vL9xQ4wN8zT1yB_19 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_22 : planeaYDirige
+mR7kP2vL9xQ4wN8zT1yB_22 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_21 : registra
+mR7kP2vL9xQ4wN8zT1yB_21 "1" *--> "0..1" mR7kP2vL9xQ4wN8zT1yB_20 : evalua
+mR7kP2vL9xQ4wN8zT1yB_22 "0..*" --> "1" mR7kP2vL9xQ4wN8zT1yB_24 : ocupa
+mR7kP2vL9xQ4wN8zT1yB_38 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_23 : solicita
+mR7kP2vL9xQ4wN8zT1yB_23 "0..*" --> "1" mR7kP2vL9xQ4wN8zT1yB_24 : reservaBloque
+mR7kP2vL9xQ4wN8zT1yB_38 "1" *--> "0..3" mR7kP2vL9xQ4wN8zT1yB_37 : tieneNivelYELO
+mR7kP2vL9xQ4wN8zT1yB_37 "0..*" --> "1" mR7kP2vL9xQ4wN8zT1yB_29 : enDisciplina
+mR7kP2vL9xQ4wN8zT1yB_38 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_39 : juegaEn
+mR7kP2vL9xQ4wN8zT1yB_40 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_39 : nomina
+mR7kP2vL9xQ4wN8zT1yB_40 "0..*" --> "1" mR7kP2vL9xQ4wN8zT1yB_33 : deporte
+mR7kP2vL9xQ4wN8zT1yB_39 "1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_44 : recibeSancion
+mR7kP2vL9xQ4wN8zT1yB_46 "0..*" --> "2" mR7kP2vL9xQ4wN8zT1yB_40 : enfrenta
+mR7kP2vL9xQ4wN8zT1yB_46 "0..1" --> "0..*" mR7kP2vL9xQ4wN8zT1yB_44 : sanciona
+mR7kP2vL9xQ4wN8zT1yB_41 "0..*" --> "0..1" mR7kP2vL9xQ4wN8zT1yB_40 : equipoInscrito
+mR7kP2vL9xQ4wN8zT1yB_41 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_47 : programacion
+mR7kP2vL9xQ4wN8zT1yB_45 "0..1" --> "1" mR7kP2vL9xQ4wN8zT1yB_23 : usa
+mR7kP2vL9xQ4wN8zT1yB_48 "1" *--> "1..*" mR7kP2vL9xQ4wN8zT1yB_49 : estadisticas
+mR7kP2vL9xQ4wN8zT1yB_5 "0..1" --> "0..1" mR7kP2vL9xQ4wN8zT1yB_55 : aplicaBono
+mR7kP2vL9xQ4wN8zT1yB_56 "1" --> "0..1" mR7kP2vL9xQ4wN8zT1yB_55 : otorgaBono
+mR7kP2vL9xQ4wN8zT1yB_58 "1" *--> "0..*" mR7kP2vL9xQ4wN8zT1yB_59 : inscritos
+mR7kP2vL9xQ4wN8zT1yB_58 "1" *--> "0..*" mR7kP2vL9xQ4wN8zT1yB_60 : encuentros
+mR7kP2vL9xQ4wN8zT1yB_62 "1" --> "1" mR7kP2vL9xQ4wN8zT1yB_61 : persiste
+mR7kP2vL9xQ4wN8zT1yB_62 "1" --> "1" mR7kP2vL9xQ4wN8zT1yB_65 : leeEntrada
+mR7kP2vL9xQ4wN8zT1yB_63 "1" --> "1" mR7kP2vL9xQ4wN8zT1yB_65 : leeEntrada
+mR7kP2vL9xQ4wN8zT1yB_64 "1" --> "1" mR7kP2vL9xQ4wN8zT1yB_65 : leeEntrada
+@enduml

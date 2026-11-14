@@ -1,0 +1,20 @@
+ADMIN;admin;admin123;Carlos Administrador;0
+ENTRENADOR;profe_juan;pass123;Juan Perez;DESC_JUAN;1200
+ENTRENADOR;profe_marta;pass123;Marta Gomez;DESC_MARTA;800
+ENTRENADOR;profe_andres;pass123;Andres Castro;DESC_ANDRES;500
+FISIOTERAPEUTA;fisio_laura;pass123;Laura Rios;DESC_LAURA;600
+FISIOTERAPEUTA;fisio_camilo;pass123;Camilo Vega;DESC_CAMILO;400
+SOCIO;socio_mateo;pass123;Mateo Silva;16;Tenis:Avanzado:1200.0,Pádel:Intermedio:1100.0;3500;false;BONO_BIENVENIDA:0.2:Copa Integracion CDS:false
+SOCIO;socio_valeria;pass123;Valeria Ortiz;16;Tenis:Intermedio:1150.0,Tenis de Mesa:Avanzado:1220.0;2000;false;BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false,BONO_TORNEORELMPAGOTENISDEMESA_SOCIO_VALERIA:0.15:Torneo Relámpago Tenis de Mesa:false
+SOCIO;socio_lucas;pass123;Lucas Diaz;16;Tenis:Principiante:1000.0,Tenis de Mesa:Principiante:1000.0;1000;false;
+SOCIO;socio_santiago;pass123;Santiago Mora;16;Tenis:Intermedio:1120.0;500;false;
+SOCIO;socio_nicolas;pass123;Nicolas Pardo;16;Pádel:Intermedio:1100.0;500;false;
+SOCIO;socio_samuel;pass123;Samuel Rojas;16;Tenis:Principiante:1000.0;500;false;
+SOCIO;socio_tomas;pass123;Tomas Vargas;16;Tenis:Principiante:1000.0;500;false;
+SOCIO;socio_carlos;pass123;Carlos Mayor;21;Tenis:Avanzado:1250.0,Pádel:Avanzado:1210.0;4000;false;
+SOCIO;socio_diego;pass123;Diego Herrera;22;Tenis:Intermedio:1140.0;1500;false;
+SOCIO;socio_felipe;pass123;Felipe Mendoza;20;Tenis de Mesa:Intermedio:1110.0;1000;false;
+SOCIO;socio_julian;pass123;Julian Restrepo;23;Tenis:Principiante:1020.0;1000;false;
+SOCIO;socio_sebastian;pass123;Sebastian Lozano;21;Pádel:Intermedio:1100.0;1000;false;
+SOCIO;socio_alejandro;pass123;Alejandro Gil;22;Tenis:Intermedio:1100.0;1000;false;
+SOCIO;socio_daniel;pass123;Daniel Acosta;20;Tenis:Principiante:1000.0;1000;false;

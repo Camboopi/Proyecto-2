@@ -1,0 +1,4 @@
+Raqueta de Tenis;Raquetas;450000.0;10;5;5
+Balón de Fútbol;Balones;120000.0;25;12;13
+Malla Reglamentaria;Mallas;180000.0;8;4;4
+Uniforme Oficial CDS;Uniformes;85000.0;40;20;20

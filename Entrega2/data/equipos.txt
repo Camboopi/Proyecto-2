@@ -1,0 +1,4 @@
+Halcones CDS;Fútbol;Sub-17;15;socio_mateo:Delantero:9,socio_valeria:Mediocampista:10,socio_lucas:Defensa:4,socio_santiago:Portero:1,socio_nicolas:Defensa:2,socio_samuel:Mediocampista:8,socio_tomas:Delantero:11
+Cóndores CDS;Fútbol;Sub-17;15;
+Titanes Mayores CDS;Fútbol;Mayores;18;socio_carlos:Delantero:9,socio_diego:Mediocampista:8,socio_felipe:Defensa:3,socio_julian:Portero:1,socio_sebastian:Defensa:4,socio_alejandro:Mediocampista:6,socio_daniel:Delantero:7
+Panteras CDS;Voleibol;Sub-17;12;socio_mateo:Opuesto:9,socio_valeria:Armadora:7

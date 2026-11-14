@@ -1,0 +1,3 @@
+RECREATIVO;Abierto Recreativo Tenis CDS;Tenis;Libre;Sencillos;5;Sabado;Inscripciones Abiertas;0.2;false;socio_mateo:Socio:Avanzado:true:0.0,socio_valeria:Socio:Intermedio:false:0.0;;
+COMPETITIVO;Copa Competitiva Tenis Séneca;Tenis;Libre;Sencillos;5;Sabado;En curso;50000.0;true;socio_carlos:Socio:Avanzado:true:50000.0,profe_juan:Empleado:Avanzado:false:0.0,Camila Estudiante Uniandes:Estudiante Universidad:Intermedio:false:50000.0;Ronda 1|Carlos Mayor|Camila Estudiante Uniandes|6-3, 6-2|Carlos Mayor;
+RECREATIVO;Torneo Relámpago Tenis de Mesa;Tenis de Mesa;Libre;Sencillos;5;Martes;Finalizado;0.15;true;socio_valeria:Socio:Avanzado:true:0.0,socio_lucas:Socio:Principiante:false:0.0;Final|Valeria Ortiz|Lucas Diaz|3-1|Valeria Ortiz;Valeria Ortiz
